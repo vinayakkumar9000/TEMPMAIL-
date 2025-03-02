@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2, Copy, RefreshCw, ArrowRight } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Provider } from '@/lib/types';
 
 const EmailGenerator = () => {
   const { 
@@ -32,7 +31,7 @@ const EmailGenerator = () => {
   // Set a random provider when component first loads
   useEffect(() => {
     if (!sessions.mailtm.isAuthenticated && !sessions.guerrilla.isAuthenticated) {
-      const providers: Provider[] = ['mailtm', 'guerrilla'];
+      const providers = ['mailtm', 'guerrilla'];
       const randomProvider = providers[Math.floor(Math.random() * providers.length)];
       setCurrentProvider(randomProvider);
     }
@@ -81,7 +80,7 @@ const EmailGenerator = () => {
             </Label>
             <Select
               value={currentProvider}
-              onValueChange={(value) => setCurrentProvider(value as Provider)}
+              onValueChange={(value) => setCurrentProvider(value as 'mailtm' | 'guerrilla')}
             >
               <SelectTrigger className="mt-1.5">
                 <SelectValue placeholder="Select a provider" />
