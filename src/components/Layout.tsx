@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
+import UISwitcher from '@/components/UISwitcher';
 import LanguageSelector from '@/components/LanguageSelector';
 import UserIpDisplay from '@/components/UserIpDisplay';
 import SiteMenu from '@/components/SiteMenu';
 import { useLanguage } from '@/context/LanguageContext';
+import { useUI } from '@/context/UIContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,11 +18,13 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, className }) => {
   const { t, isRTL } = useLanguage();
+  const { uiStyle } = useUI();
   
   return (
     <div className={cn(
       "min-h-screen bg-background flex flex-col",
-      isRTL && "text-right rtl"
+      isRTL && "text-right rtl",
+      `ui-${uiStyle}`
     )}>
       <header className="w-full glass sticky top-0 z-50 border-b border-b-border/20 shadow-sm">
         <div className="container h-16 flex items-center justify-between">
@@ -43,6 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
             <LanguageSelector />
             <ThemeToggle />
             <ThemeSwitcher />
+            <UISwitcher />
             <SiteMenu />
             <a
               href="https://github.com/vinayakkumar9000"

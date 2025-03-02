@@ -211,3 +211,162 @@
     transform: translateY(0);
   }
 }
+
+/* UI STYLES */
+
+/* Default UI - Current design */
+.ui-default {
+  /* Default styles are already set in the theme variables */
+}
+
+/* Minimal UI */
+.ui-minimal {
+  --radius: 0.25rem;
+}
+
+.ui-minimal .card,
+.ui-minimal button,
+.ui-minimal input,
+.ui-minimal select {
+  @apply rounded-sm shadow-none border-0;
+}
+
+.ui-minimal header {
+  @apply bg-background shadow-none border-0;
+}
+
+.ui-minimal main {
+  @apply max-w-5xl mx-auto;
+}
+
+.ui-minimal footer {
+  @apply bg-muted/10;
+}
+
+/* Hacker UI */
+.ui-hacker {
+  --background: 120 100% 2%;
+  --foreground: 120 100% 80%;
+  --card: 120 100% 5%;
+  --card-foreground: 120 100% 80%;
+  --popover: 120 100% 3%;
+  --popover-foreground: 120 100% 80%;
+  --primary: 120 100% 50%;
+  --primary-foreground: 120 100% 5%;
+  --secondary: 120 100% 10%;
+  --secondary-foreground: 120 100% 80%;
+  --muted: 120 100% 10%;
+  --muted-foreground: 120 100% 60%;
+  --accent: 120 100% 10%;
+  --accent-foreground: 120 100% 80%;
+  --border: 120 100% 20%;
+  --input: 120 100% 10%;
+  --ring: 120 100% 50%;
+  --radius: 0;
+  
+  font-family: monospace !important;
+}
+
+.ui-hacker * {
+  @apply border-primary/30;
+}
+
+.ui-hacker header {
+  @apply bg-card border-primary/30;
+}
+
+.ui-hacker .glass {
+  background: rgba(0, 20, 0, 0.9);
+  border-color: rgba(0, 255, 0, 0.3);
+}
+
+.ui-hacker button {
+  @apply border border-primary/50;
+}
+
+.ui-hacker input,
+.ui-hacker select {
+  @apply bg-card border border-primary/30 text-foreground;
+}
+
+@keyframes terminalBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.ui-hacker::after {
+  content: "_";
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  color: hsl(var(--primary));
+  animation: terminalBlink 1s infinite;
+}
+
+/* Futuristic UI */
+.ui-futuristic {
+  --radius: 1.5rem;
+}
+
+.ui-futuristic .card,
+.ui-futuristic button,
+.ui-futuristic input,
+.ui-futuristic select {
+  @apply rounded-2xl shadow-lg border border-primary/10 backdrop-blur-sm;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+
+.ui-futuristic header {
+  @apply bg-transparent backdrop-blur-xl;
+  background: linear-gradient(90deg, rgba(var(--primary), 0.05), rgba(var(--primary), 0.2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ui-futuristic button {
+  @apply bg-gradient-to-r from-primary/80 to-primary/60 text-primary-foreground border-0;
+}
+
+.ui-futuristic .glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Elegant UI */
+.ui-elegant {
+  --radius: 0.25rem;
+  font-family: 'Georgia', serif !important;
+}
+
+.ui-elegant .card {
+  @apply border-none shadow-none bg-transparent;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.ui-elegant button {
+  @apply rounded-none border-b-2 border-primary bg-transparent text-primary hover:bg-primary/5;
+}
+
+.ui-elegant header {
+  @apply bg-background border-none;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.ui-elegant h1, 
+.ui-elegant h2, 
+.ui-elegant h3 {
+  @apply font-serif;
+}
+
+.ui-elegant .glass {
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: 1px solid hsl(var(--border));
+  box-shadow: none;
+}
+
+.ui-elegant input,
+.ui-elegant select {
+  @apply rounded-none border-x-0 border-t-0 border-b border-b-primary/50 bg-transparent;
+}

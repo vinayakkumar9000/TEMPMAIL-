@@ -6,12 +6,15 @@ import EmailGenerator from '@/components/EmailGenerator';
 import Inbox from '@/components/Inbox';
 import EmailViewer from '@/components/EmailViewer';
 import { EmailProvider as EmailContextProvider } from '@/context/EmailContext';
+import { useUI } from '@/context/UIContext';
 
 const Index = () => {
+  const { uiStyle } = useUI();
+  
   return (
     <EmailContextProvider>
       <Layout>
-        <div className="space-y-6 animate-fade-in">
+        <div className={`space-y-6 animate-fade-in ${uiStyle !== 'default' ? `ui-layout-${uiStyle}` : ''}`}>
           <section>
             <h2 className="text-3xl font-medium tracking-tight mb-4">Temporary Email Service</h2>
             <p className="text-muted-foreground max-w-2xl">
