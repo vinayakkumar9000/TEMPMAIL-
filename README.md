@@ -26,7 +26,7 @@ This is a **temporary email generator** that allows users to create **disposable
 We **challenge you** to build the **best temp mail service in the industry**! 🏆 If you can **improve** this project, submit a **pull request** and get your contributions merged. 🔥  
 
 ### 🏗️ How to Contribute:  
-1️⃣ **Remix & Edit**: Open **[Lovable.dev](https://lovable.dev/projects/487edbe4-49ff-4f4d-9191-82bbb398357b)** and click **"Remix"** 🔄  
+1️⃣ **Remix & Edit**: Open **[Lovable.dev](https://lovable.dev/projects/487edbe4-49ff-4f4d-9191-82bbb398357b)** and click **"Remix"** 🔄(https://lovable.dev/projects/487edbe4-49ff-4f4d-9191-82bbb398357b)  
 2️⃣ **Enhance & Test**: Add new features, improve UI, or optimize performance ⚡  
 3️⃣ **Convert to APK** (Optional): If you can convert this into an **Android APK**, push a request! 📲📦  
 4️⃣ **Submit Pull Request**: If your version is better, **push a pull request** so we can merge your updates! 🚀  
