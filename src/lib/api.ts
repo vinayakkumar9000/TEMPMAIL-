@@ -102,17 +102,26 @@ export const getMailtmDomains = async (): Promise<ApiResponse<Domain[]>> => {
       throw new Error('Failed to fetch Mail.tm domains');
     }
     
-    const domains = await response.json();
+    const data = await response.json();
     
-    // Format domains to match our interface
-    const formattedDomains: Domain[] = domains.map((domain: any) => ({
-      domain: domain.domain,
-      isActive: domain.isActive,
-    }));
+    // FIX: Check if hydra:member exists and is an array
+    if (data && data['hydra:member'] && Array.isArray(data['hydra:member'])) {
+      // Format domains to match our interface
+      const formattedDomains: Domain[] = data['hydra:member'].map((domain: any) => ({
+        domain: domain.domain,
+        isActive: domain.isActive,
+      }));
+      
+      return {
+        status: 200,
+        data: formattedDomains,
+      };
+    }
     
+    // If hydra:member doesn't exist or is not an array, return an empty array
     return {
       status: 200,
-      data: formattedDomains,
+      data: [],
     };
   } catch (error: any) {
     return handleApiError(error, 'Failed to fetch Mail.tm domains');

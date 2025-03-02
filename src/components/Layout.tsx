@@ -2,6 +2,7 @@
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
             <h1 className="text-xl font-medium tracking-tight">TempMail</h1>
           </div>
           <nav className="flex items-center space-x-4">
+            <ThemeToggle />
             <a
               href="https://github.com/yourusername/temp-mail-saas"
               target="_blank"
