@@ -17,8 +17,7 @@ import {
   getGuerrillaMessages,
   getGuerrillaMessageContent,
   deleteGuerrillaMessage,
-  formatEmailAddress,
-  getGuerrillaDomains
+  formatEmailAddress
 } from '../lib/api';
 import { toast } from '@/components/ui/use-toast';
 
@@ -49,10 +48,7 @@ const defaultContext: EmailContextType = {
   sessions: {
     mailtm: { isAuthenticated: false },
     guerrilla: { isAuthenticated: false }
-  },
-  guerrillaDomains: [],
-  fetchGuerrillaDomains: async () => {},
-  setGuerrillaSelectedDomain: () => {}
+  }
 };
 
 // Create context
@@ -80,41 +76,6 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     guerrilla: { isAuthenticated: false }
   });
   const [refreshTimer, setRefreshTimer] = useState<NodeJS.Timeout | null>(null);
-  const [guerrillaDomains, setGuerrillaDomains] = useState<string[]>([]);
-  const [guerrillaSelectedDomain, setGuerrillaSelectedDomain] = useState<string>('');
-  
-  // Fetch Guerrilla Mail domains
-  const fetchGuerrillaDomains = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      const response = await getGuerrillaDomains();
-      
-      if ('data' in response) {
-        setGuerrillaDomains(response.data);
-        
-        if (response.data.length > 0 && !guerrillaSelectedDomain) {
-          setGuerrillaSelectedDomain(response.data[0]);
-        }
-      } else {
-        setError(response.message);
-        toast({
-          title: 'Error',
-          description: response.message,
-          variant: 'destructive',
-        });
-      }
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch Guerrilla Mail domains');
-      toast({
-        title: 'Error',
-        description: err.message || 'Failed to fetch Guerrilla Mail domains',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [guerrillaSelectedDomain]);
 
   // Fetch domains
   const fetchDomains = useCallback(async () => {
@@ -204,15 +165,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
       } else {
         // Guerrilla Mail
-        if (guerrillaDomains.length === 0) {
-          await fetchGuerrillaDomains();
-        }
-        
-        // For Guerrilla Mail, pass the selected domain if available
-        const session = await initGuerrillaSession(
-          username || customUsername, 
-          guerrillaSelectedDomain || undefined
-        );
+        const session = await initGuerrillaSession(username || customUsername);
         
         if ('data' in session) {
           const formattedAddress = formatEmailAddress(session.data.emailAddress, 'guerrilla');
@@ -249,16 +202,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } finally {
       setLoading(false);
     }
-  }, [
-    currentProvider, 
-    selectedDomain, 
-    customUsername, 
-    availableDomains, 
-    fetchDomains, 
-    guerrillaDomains, 
-    guerrillaSelectedDomain, 
-    fetchGuerrillaDomains
-  ]);
+  }, [currentProvider, selectedDomain, customUsername, availableDomains, fetchDomains]);
 
   // Fetch emails
   const fetchEmails = useCallback(async () => {
@@ -454,14 +398,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (sessions[currentProvider].isAuthenticated) {
       fetchEmails();
     }
-    
-    // Fetch domains for the current provider
-    if (currentProvider === 'mailtm') {
-      fetchDomains();
-    } else if (currentProvider === 'guerrilla') {
-      fetchGuerrillaDomains();
-    }
-  }, [currentProvider, sessions, fetchEmails, fetchDomains, fetchGuerrillaDomains]);
+  }, [currentProvider, sessions, fetchEmails]);
 
   // Set up auto-refresh
   useEffect(() => {
@@ -484,12 +421,8 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Fetch domains on initial load
   useEffect(() => {
-    // Fetch domains for Mail.tm
     fetchDomains();
-    
-    // Fetch domains for Guerrilla Mail
-    fetchGuerrillaDomains();
-  }, [fetchDomains, fetchGuerrillaDomains]);
+  }, [fetchDomains]);
 
   // Context value
   const value: EmailContextType = {
@@ -515,10 +448,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     fetchDomains,
     customUsername,
     setCustomUsername,
-    sessions,
-    guerrillaDomains,
-    fetchGuerrillaDomains,
-    setGuerrillaSelectedDomain
+    sessions
   };
 
   return (
