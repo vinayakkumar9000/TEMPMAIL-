@@ -198,10 +198,19 @@ export const getMailtmMessages = async (token: string): Promise<ApiResponse<Emai
       throw new Error('Failed to fetch Mail.tm messages');
     }
     
-    const messagesData = await response.json();
+    const data = await response.json();
+    
+    // Check if there are messages in the response
+    if (!data || !data["hydra:member"]) {
+      // Return empty array if no messages
+      return {
+        status: 200,
+        data: [],
+      };
+    }
     
     // Format messages to match our interface
-    const emails: Email[] = messagesData.map((message: any) => ({
+    const emails: Email[] = data["hydra:member"].map((message: any) => ({
       id: message.id,
       from: {
         address: message.from.address,

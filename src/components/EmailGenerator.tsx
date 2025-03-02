@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2, Copy, RefreshCw, ArrowRight } from 'lucide-react';
 
@@ -49,14 +48,6 @@ const EmailGenerator = () => {
     }
   };
   
-  const handleDomainChange = (value: string) => {
-    setSelectedDomain(value);
-  };
-  
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomUsername(e.target.value);
-  };
-  
   return (
     <Card className="glass hover:shadow-md transition-all duration-300">
       <CardHeader className="pb-3">
@@ -93,41 +84,41 @@ const EmailGenerator = () => {
           </div>
         ) : (
           <div className="space-y-4 animate-fade-in">
-            {currentProvider === 'mailtm' && (
+            {currentProvider === 'guerrilla' && (
               <div>
-                <Label htmlFor="domain" className="text-sm font-medium">
-                  Domain
+                <Label htmlFor="username" className="text-sm font-medium">
+                  Username (optional)
                 </Label>
-                <Select value={selectedDomain} onValueChange={handleDomainChange}>
-                  <SelectTrigger id="domain" className="w-full mt-1.5">
-                    <SelectValue placeholder="Select a domain" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableDomains.filter(d => d.isActive).map((domain) => (
-                      <SelectItem key={domain.domain} value={domain.domain}>
-                        @{domain.domain}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  id="username"
+                  placeholder="e.g., johndoe123"
+                  value={customUsername}
+                  onChange={(e) => setCustomUsername(e.target.value)}
+                  className="mt-1.5"
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Leave blank to generate a random username
+                </p>
               </div>
             )}
             
-            <div>
-              <Label htmlFor="username" className="text-sm font-medium">
-                Username (optional)
-              </Label>
-              <Input
-                id="username"
-                placeholder="e.g., johndoe123"
-                value={customUsername}
-                onChange={handleUsernameChange}
-                className="mt-1.5"
-              />
-              <p className="text-xs text-muted-foreground mt-2">
-                Leave blank to generate a random username
-              </p>
-            </div>
+            {currentProvider === 'mailtm' && (
+              <div>
+                <Label htmlFor="username" className="text-sm font-medium">
+                  Username (optional)
+                </Label>
+                <Input
+                  id="username"
+                  placeholder="e.g., johndoe123"
+                  value={customUsername}
+                  onChange={(e) => setCustomUsername(e.target.value)}
+                  className="mt-1.5"
+                />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Leave blank to generate a random username. Domain will be selected automatically.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
@@ -155,7 +146,7 @@ const EmailGenerator = () => {
           <Button 
             className="w-full" 
             onClick={handleGenerate}
-            disabled={loading || (currentProvider === 'mailtm' && !selectedDomain)}
+            disabled={loading}
           >
             {loading ? (
               <>

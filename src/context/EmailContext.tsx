@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   Provider, 
@@ -34,7 +33,7 @@ const defaultContext: EmailContextType = {
   error: null,
   selectedEmail: null,
   setSelectedEmail: () => {},
-  refreshInterval: 30000,
+  refreshInterval: 10000,
   setRefreshInterval: () => {},
   deleteEmail: async () => {},
   deleteAllEmails: async () => {},
@@ -67,7 +66,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
-  const [refreshInterval, setRefreshInterval] = useState<number>(30000);
+  const [refreshInterval, setRefreshInterval] = useState<number>(10000);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [availableDomains, setAvailableDomains] = useState<Domain[]>([]);
   const [selectedDomain, setSelectedDomain] = useState<string>('');
@@ -118,11 +117,27 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setError(null);
       
       if (currentProvider === 'mailtm') {
-        if (!selectedDomain) {
-          throw new Error('No domain selected');
+        // If no domain is selected but we have available domains, select the first one
+        let domainToUse = selectedDomain;
+        
+        if (!domainToUse && availableDomains.length > 0) {
+          domainToUse = availableDomains[0].domain;
+          setSelectedDomain(domainToUse);
         }
         
-        const auth = await authenticateMailtm(selectedDomain, username || customUsername);
+        if (!domainToUse) {
+          // Try to fetch domains if we don't have any
+          await fetchDomains();
+          
+          if (availableDomains.length > 0) {
+            domainToUse = availableDomains[0].domain;
+            setSelectedDomain(domainToUse);
+          } else {
+            throw new Error('No domains available. Please try again later.');
+          }
+        }
+        
+        const auth = await authenticateMailtm(domainToUse, username || customUsername);
         
         if ('data' in auth) {
           const formattedAddress = formatEmailAddress(auth.data.address, 'mailtm');
@@ -187,7 +202,7 @@ export const EmailProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } finally {
       setLoading(false);
     }
-  }, [currentProvider, selectedDomain, customUsername]);
+  }, [currentProvider, selectedDomain, customUsername, availableDomains, fetchDomains]);
 
   // Fetch emails
   const fetchEmails = useCallback(async () => {
