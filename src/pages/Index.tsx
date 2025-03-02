@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '@/components/Layout';
 import EmailProvider from '@/components/EmailProvider';
 import EmailGenerator from '@/components/EmailGenerator';
@@ -10,6 +10,12 @@ import { useUI } from '@/context/UIContext';
 
 const Index = () => {
   const { uiStyle } = useUI();
+  
+  // Force re-render when UI style changes
+  useEffect(() => {
+    console.log(`Index page applying UI style: ${uiStyle}`);
+    // This is just to ensure the component re-renders when uiStyle changes
+  }, [uiStyle]);
   
   return (
     <EmailContextProvider>

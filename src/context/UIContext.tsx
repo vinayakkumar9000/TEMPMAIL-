@@ -28,10 +28,21 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   // Update document class and localStorage when style changes
   useEffect(() => {
+    // First, remove all UI style classes
     const root = window.document.documentElement;
     root.classList.remove('ui-default', 'ui-minimal', 'ui-hacker', 'ui-futuristic', 'ui-elegant');
+    
+    // Then add the current UI style class
     root.classList.add(`ui-${uiStyle}`);
+    
+    // Save to localStorage
     localStorage.setItem('uiStyle', uiStyle);
+    
+    // Force a re-render of components by applying a body class
+    document.body.className = document.body.className.replace(/ui-style-.*/g, '');
+    document.body.classList.add(`ui-style-${uiStyle}`);
+    
+    console.log(`UI style changed to: ${uiStyle}`);
   }, [uiStyle]);
 
   return (

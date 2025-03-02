@@ -45,9 +45,9 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
           </div>
           <nav className="flex items-center space-x-4">
             <LanguageSelector />
+            <UISwitcher />
             <ThemeToggle />
             <ThemeSwitcher />
-            <UISwitcher />
             <SiteMenu />
             <a
               href="https://github.com/vinayakkumar9000"
