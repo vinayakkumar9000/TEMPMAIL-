@@ -13,10 +13,13 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, className }) => {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className={cn(
+      "min-h-screen bg-background flex flex-col",
+      isRTL && "text-right rtl"
+    )}>
       <header className="w-full glass sticky top-0 z-50 border-b border-b-border/20 shadow-sm">
         <div className="container h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -71,7 +74,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
               {t('app.description')}
             </p>
             <div className="text-xs text-muted-foreground">
-              Powered by Mail.tm and Guerrilla Mail
+              {t('footer.powered')}
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">

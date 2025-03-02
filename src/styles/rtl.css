@@ -1,0 +1,63 @@
+
+/* RTL Support Styles */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .language-container {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl button,
+.rtl .rtl-flip {
+  transform: scaleX(-1);
+}
+
+.rtl button > span,
+.rtl button > svg + span {
+  transform: scaleX(-1);
+}
+
+.rtl svg:not(.no-flip) {
+  transform: scaleX(-1);
+}
+
+/* Fix some specific UI elements in RTL mode */
+.rtl-layout .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl .ml-auto {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+.rtl .mr-2 {
+  margin-right: unset;
+  margin-left: 0.5rem;
+}
+
+.rtl .ml-2 {
+  margin-left: unset;
+  margin-right: 0.5rem;
+}
+
+.rtl .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+.rtl .mr-4 {
+  margin-right: unset;
+  margin-left: 1rem;
+}
+
+.rtl .ml-4 {
+  margin-left: unset;
+  margin-right: 1rem;
+}
+
+/* Exception for logos and certain icons */
+.rtl .no-flip {
+  transform: none !important;
+}
