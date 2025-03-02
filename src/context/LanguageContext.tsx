@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Define language types
@@ -119,19 +120,61 @@ const translations: Record<string, Record<string, string>> = {
   // Translations for other languages will be added by the translation service
 };
 
-// Import language packs dynamically
-const importLanguagePack = async (languageCode: string) => {
+// Translate text using Google Translate API
+const translateText = (text: string, targetLang: string): Promise<string> => {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+  
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => data[0].map((item: any) => item[0]).join(" "))
+    .catch(error => {
+      console.error("Translation Error:", error);
+      return text; // Return original text if translation fails
+    });
+};
+
+// Batch translate all strings in a language file
+const translateLanguageFile = async (sourceStrings: Record<string, string>, targetLang: string): Promise<Record<string, string>> => {
+  const result: Record<string, string> = {};
+  const keys = Object.keys(sourceStrings);
+  
+  // Process translations in batches to avoid overloading the API
+  const batchSize = 10;
+  for (let i = 0; i < keys.length; i += batchSize) {
+    const batch = keys.slice(i, i + batchSize);
+    const promises = batch.map(async (key) => {
+      const translated = await translateText(sourceStrings[key], targetLang);
+      result[key] = translated;
+    });
+    
+    await Promise.all(promises);
+  }
+  
+  return result;
+};
+
+// Import language packs from file or generate via translation
+const getLanguagePack = async (languageCode: string): Promise<Record<string, string>> => {
   try {
+    // First try to load from static file
     const response = await fetch(`/languages/${languageCode}.json`);
     if (response.ok) {
-      const data = await response.json();
-      translations[languageCode] = data;
-      return true;
+      return await response.json();
     }
-    return false;
+
+    // If static file doesn't exist, translate from English
+    console.log(`Static file for ${languageCode} not found, using translation API`);
+    return await translateLanguageFile(translations.en, languageCode);
   } catch (error) {
     console.error(`Failed to load language pack for ${languageCode}:`, error);
-    return false;
+    
+    // Try to translate directly if file loading fails
+    try {
+      return await translateLanguageFile(translations.en, languageCode);
+    } catch (translationError) {
+      console.error(`Translation also failed for ${languageCode}:`, translationError);
+      return translations.en; // Fallback to English
+    }
   }
 };
 
@@ -148,6 +191,9 @@ export const useLanguage = () => useContext(LanguageContext);
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<string>('en');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [translatedStrings, setTranslatedStrings] = useState<Record<string, Record<string, string>>>({
+    en: translations.en
+  });
   
   // Detect browser language on initial load
   useEffect(() => {
@@ -197,6 +243,28 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [language]);
   
+  // Load translations when language changes
+  useEffect(() => {
+    const loadTranslations = async () => {
+      if (translatedStrings[language]) {
+        // Already loaded
+        return;
+      }
+      
+      try {
+        const translations = await getLanguagePack(language);
+        setTranslatedStrings(prev => ({
+          ...prev,
+          [language]: translations
+        }));
+      } catch (error) {
+        console.error(`Failed to load translations for ${language}:`, error);
+      }
+    };
+    
+    loadTranslations();
+  }, [language, translatedStrings]);
+  
   const setLanguage = (code: string) => {
     setLanguageState(code);
     localStorage.setItem('preferredLanguage', code);
@@ -209,7 +277,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const t = (key: string) => {
     if (!isLoaded) return key;
     
-    const currentTranslations = translations[language] || translations.en;
+    const currentTranslations = translatedStrings[language] || translations.en;
     return currentTranslations[key] || translations.en[key] || key;
   };
   

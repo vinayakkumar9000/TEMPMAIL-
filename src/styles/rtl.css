@@ -61,3 +61,16 @@
 .rtl .no-flip {
   transform: none !important;
 }
+
+/* Fix for translated text overflow issues */
+.text-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Allow text to wrap in translated context where it might be longer */
+.translated-text-wrap {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
