@@ -16,7 +16,8 @@ This is a **temporary email generator** that allows users to create **disposable
 ✅ Instantly generate a **temp email** 📩  
 ✅ Auto-refresh inbox to receive emails 🔄  
 ✅ No sign-up required ❌📝  
-✅ Works on **mobile & desktop** 📱💻  
+✅ Works on **mobile & desktop** 📱💻
+✅ store emails permanently received on mail.tm 
 ✅ 100% **Free & Open Source** 🆓🔓  
 
 ---
