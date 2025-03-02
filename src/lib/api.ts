@@ -1,16 +1,56 @@
-
 import { Provider, EmailAddress, Email, Domain, ApiResponse, ApiErrorResponse } from './types';
 
-// Helper function to generate random username
+// Helper function to generate random username using names and numbers
 const generateRandomUsername = (): string => {
-  const adjectives = ['swift', 'quick', 'silent', 'bright', 'calm', 'daring', 'eager', 'fair'];
-  const nouns = ['lion', 'eagle', 'river', 'moon', 'star', 'ocean', 'forest', 'mountain'];
+  const names = [
+    "Aaron", "Bella", "Caleb", "Dylan", "Elena", "Felix", "Grace", "Hector", "Isaac", "Julia",
+    "Kieran", "Liam", "Mason", "Naomi", "Oscar", "Parker", "Quincy", "Rafael", "Selena", "Travis",
+    "Umar", "Victor", "Wendy", "Xander", "Yasmin", "Zane", "Abel", "Bri", "Cleo", "Damon",
+    "Elsie", "Floyd", "Gina", "Holly", "Ivy", "Jaxon", "Kylie", "Leo", "Mira", "Nolan",
+    "Omar", "Penny", "Quinn", "Rosie", "Silas", "Toby", "Ursula", "Vince", "Willa", "Xena",
+    "Yvette", "Zara", "Aiden", "Brock", "Carmen", "Dante", "Emmy", "Freddy", "Gemma", "Hugo",
+    "Ivory", "Jude", "Kara", "Loren", "Miles", "Nadia", "Otis", "Paige", "Quade", "Riley",
+    "Sienna", "Tasha", "Ulric", "Vivian", "Wyatt", "Xyla", "Yohan", "Zeke", "Amber", "Blair",
+    "Carter", "Della", "Erik", "Fiona", "Gavin", "Haley", "Indira", "Jasper", "Kayla", "Lydia",
+    "Matteo", "Nico", "Oriana", "Pablo", "Qiana", "Reed", "Seth", "Tessa", "Upton", "Verna",
+    "Wes", "Xiomar", "Yule", "Zion", "Asher", "Bryce", "Chase", "Daisy", "Ezekiel", "Frank",
+    "Glenn", "Heather", "Ilene", "Joey", "Kenny", "Lance", "Macy", "Nova", "Owen", "Priya",
+    "Quin", "Rowan", "Stefan", "Tina", "Ugo", "Vera", "Wayne", "Xavi", "Yana", "Zola",
+    "Alec", "Brent", "Craig", "Devon", "Edgar", "Faye", "Gordon", "Hope", "Imran", "Jenna",
+    "Keith", "Lana", "Mitzi", "Norris", "Orin", "Piers", "Quenton", "Rita", "Shaun", "Toby",
+    "Ulysses", "Vito", "Wren", "Xerxes", "Yasmin", "Zack", "Arlo", "Bonnie", "Clyde", "Dorian",
+    "Elaine", "Farris", "Grady", "Hanna", "Iris", "Juliet", "Kurt", "Lorenzo", "Mona", "Nico",
+    "Odie", "Piper", "Quill", "Ronan", "Sage", "Tasha", "Uriah", "Vince", "Wilma", "Xylia",
+    "Yasmine", "Zephyr", "Ansel", "Baxter", "Celine", "Dion", "Elvis", "Felicia", "Gordon", "Harvey",
+    "India", "Johan", "Kelsie", "Lindsey", "Morgan", "Noah", "Opal", "Patty", "Qadir", "Reese",
+    "Serena", "Theo", "Umi", "Val", "Wanda", "Xander", "Yuri", "Zadie", "Axel", "Benny",
+    "Cynthia", "Duncan", "Esther", "Ford", "Greg", "Hilda", "Ines", "Jarvis", "Karl", "Lester",
+    "Margo", "Nigel", "Ozzie", "Presley", "Quinlan", "Roscoe", "Skyler", "Trixie", "Urban", "Vada",
+    "Winston", "Xochitl", "Yvette", "Zora", "Aria", "Basil", "Chandler", "Daria", "Edith", "Frida",
+    "Gale", "Hollis", "Irvin", "Jonah", "Kelvin", "Lazaro", "Milly", "Norma", "Oren", "Paxton",
+    "Quilla", "Reuben", "Santos", "Trudy", "Uma", "Vaughn", "Whit", "Xena", "Yancey", "Zinnia",
+    "Adrian", "Blaine", "Carmen", "Derrick", "Estelle", "Foster", "Gerald", "Harris", "Irwin", "Janet",
+    "Kendall", "Luther", "Marian", "Nadine", "Osmond", "Phoebe", "Quinton", "Rosetta", "Stella", "Tobias",
+    "Umar", "Virgil", "Wilfred", "Xanthe", "Yolanda", "Zinnia", "Avery", "Brad", "Casper", "Dennis",
+    "Elliot", "Freya", "Griffin", "Henrik", "Ida", "Jeff", "Kira", "Landon", "Maggie", "Neil",
+    "Ollie", "Parker", "Quade", "Roxanne", "Selma", "Terry", "Ulrich", "Vera", "Warren", "Xerxes",
+    "Yvette", "Zelda", "Alice", "Bobby", "Clark", "Daphne", "Ethan", "Flora", "Gabe", "Harris",
+    "Isobel", "Joanne", "Kendrick", "Lenny", "Miriam", "Nolan", "Oriana", "Patton", "Quincy", "Ronin",
+    "Sonia", "Tyrone", "Ursula", "Violet", "Wally", "Xia", "Yvonne", "Zorion", "Anders", "Betsy",
+    "Connor", "Darcy", "Eve", "Floyd", "Gilda", "Huxley", "Ian", "Julius", "Kayden", "Leslie",
+    "Milo", "Nikita", "Oren", "Phoebe", "Quint", "Rhett", "Susie", "Tina", "Ulani", "Vicente",
+    "Wynne", "Xeric", "Yusuf", "Zeke"
+  ];
   
-  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-  const randomNumber = Math.floor(Math.random() * 100);
+  // Generate a random 4-digit number between 0001 and 9999
+  const randomNumber = Math.floor(Math.random() * 9999) + 1;
+  // Pad with leading zeros to ensure 4 digits
+  const formattedNumber = randomNumber.toString().padStart(4, '0');
   
-  return `${randomAdjective}${randomNoun}${randomNumber}`.substring(0, 7);
+  // Pick a random name from the list
+  const randomName = names[Math.floor(Math.random() * names.length)];
+  
+  return `${randomName}${formattedNumber}`.toLowerCase();
 };
 
 // Handle API errors consistently

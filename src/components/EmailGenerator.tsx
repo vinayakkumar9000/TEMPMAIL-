@@ -55,7 +55,7 @@ const EmailGenerator = () => {
         <CardDescription>
           {emailAddress 
             ? "Your temporary email is ready to use" 
-            : "Create a new temporary email address"}
+            : "Create a new temporary email address with a random name & number"}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -91,13 +91,13 @@ const EmailGenerator = () => {
                 </Label>
                 <Input
                   id="username"
-                  placeholder="e.g., johndoe123"
+                  placeholder="e.g., NameXXXX (uses random if blank)"
                   value={customUsername}
                   onChange={(e) => setCustomUsername(e.target.value)}
                   className="mt-1.5"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  Leave blank to generate a random username
+                  Leave blank to generate a random name with 4-digit number
                 </p>
               </div>
             )}
@@ -109,13 +109,13 @@ const EmailGenerator = () => {
                 </Label>
                 <Input
                   id="username"
-                  placeholder="e.g., johndoe123"
+                  placeholder="e.g., NameXXXX (uses random if blank)"
                   value={customUsername}
                   onChange={(e) => setCustomUsername(e.target.value)}
                   className="mt-1.5"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  Leave blank to generate a random username. Domain will be selected automatically.
+                  Leave blank to generate a random name with 4-digit number. Domain will be selected automatically.
                 </p>
               </div>
             )}
