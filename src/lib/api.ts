@@ -42,39 +42,96 @@ export const authenticateMailtm = async (domain: string, username?: string): Pro
   try {
     // Generate a random email if username is not provided
     const emailUsername = username || generateRandomUsername();
-    const password = 'P@ssw0rd' + Math.floor(Math.random() * 10000); // Simple random password
+    // Use a consistent password format for Mail.tm
+    const password = 'TEST@1234';
+    
+    const address = `${emailUsername}@${domain}`.toLowerCase();
     
     // Register a new account
+    console.log('Attempting to create Mail.tm account with:', { address, password });
+    
     const registerResponse = await fetch(`${MAILTM_API_URL}/accounts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        address: `${emailUsername}@${domain}`,
+        address,
         password,
       }),
     });
     
     if (!registerResponse.ok) {
+      const errorData = await registerResponse.json();
+      console.error('Mail.tm account creation failed:', errorData);
+      
+      // If account already exists, try to authenticate with it
+      if (errorData.violations && 
+          errorData.violations.some((v: any) => v.message === "This value is already used.")) {
+        console.log('Account already exists, attempting to authenticate directly');
+        
+        // Get auth token for existing account
+        const tokenResponse = await fetch(`${MAILTM_API_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            address,
+            password,
+          }),
+        });
+        
+        if (!tokenResponse.ok) {
+          // If authentication fails, try with a different username
+          throw new Error('Failed to authenticate with existing account');
+        }
+        
+        const tokenData = await tokenResponse.json();
+        
+        // Get account details
+        const accountResponse = await fetch(`${MAILTM_API_URL}/me`, {
+          headers: {
+            'Authorization': `Bearer ${tokenData.token}`,
+          },
+        });
+        
+        if (!accountResponse.ok) {
+          throw new Error('Failed to get account details');
+        }
+        
+        const accountData = await accountResponse.json();
+        
+        return {
+          status: 200,
+          data: {
+            token: tokenData.token,
+            id: accountData.id,
+            address: accountData.address,
+          }
+        };
+      }
+      
       throw new Error('Failed to create Mail.tm account');
     }
     
     const accountData = await registerResponse.json();
     
-    // Get auth token
+    // Get auth token for new account
+    console.log('Account created, getting token');
     const tokenResponse = await fetch(`${MAILTM_API_URL}/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        address: `${emailUsername}@${domain}`,
+        address,
         password,
       }),
     });
     
     if (!tokenResponse.ok) {
+      console.error('Token retrieval failed', await tokenResponse.json());
       throw new Error('Failed to authenticate with Mail.tm');
     }
     
