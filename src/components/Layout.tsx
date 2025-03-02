@@ -44,8 +44,8 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
             <h1 className="text-xl font-medium tracking-tight">{t('app.title')}</h1>
           </div>
           <nav className="flex items-center space-x-4">
-            <LanguageSelector />
             <UISwitcher />
+            <LanguageSelector />
             <ThemeToggle />
             <ThemeSwitcher />
             <SiteMenu />
