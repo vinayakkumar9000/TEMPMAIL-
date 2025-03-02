@@ -7,7 +7,6 @@ import ThemeSwitcher from '@/components/ThemeSwitcher';
 import UISwitcher from '@/components/UISwitcher';
 import LanguageSelector from '@/components/LanguageSelector';
 import UserIpDisplay from '@/components/UserIpDisplay';
-import SiteMenu from '@/components/SiteMenu';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUI } from '@/context/UIContext';
 
@@ -48,7 +47,6 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
             <LanguageSelector />
             <ThemeToggle />
             <ThemeSwitcher />
-            <SiteMenu />
             <a
               href="https://github.com/vinayakkumar9000"
               target="_blank"

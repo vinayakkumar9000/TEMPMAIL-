@@ -31,7 +31,7 @@ const UISwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20">
+        <Button variant="outline" size="sm" className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border-primary/30">
           <Palette className="h-4 w-4" />
           <span className="hidden sm:inline">{t('ui.interface')}</span>
         </Button>
