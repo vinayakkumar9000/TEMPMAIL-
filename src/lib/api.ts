@@ -1,4 +1,3 @@
-
 import { Provider, EmailAddress, Email, Domain, ApiResponse, ApiErrorResponse } from './types';
 
 // Helper function to generate random username
@@ -328,8 +327,66 @@ export const deleteMailtmMessage = async (token: string, messageId: string): Pro
   }
 };
 
+// Get Guerrilla Mail domains
+export const getGuerrillaDomains = async (): Promise<ApiResponse<string[]>> => {
+  try {
+    const params = new URLSearchParams({
+      f: 'get_email_address',
+      ip: '127.0.0.1',
+      agent: 'desktop',
+    });
+    
+    // First initialize a session to get the full response with domain data
+    const response = await fetch(`${GUERRILLA_API_URL}?${params}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch Guerrilla Mail domains');
+    }
+    
+    const data = await response.json();
+    
+    // Extract domains from the response
+    if (data && data.domains && Array.isArray(data.domains)) {
+      return {
+        status: 200,
+        data: data.domains
+      };
+    }
+    
+    // Return default domains if none are found in the response
+    return {
+      status: 200,
+      data: [
+        'guerrillamail.com',
+        'guerrillamail.net',
+        'guerrillamail.org',
+        'guerrillamailblock.com',
+        'grr.la',
+        'sharklasers.com',
+        'spam4.me'
+      ]
+    };
+  } catch (error: any) {
+    console.error('Error fetching Guerrilla Mail domains:', error);
+    
+    // Return default domains in case of error
+    return {
+      status: 200,
+      data: [
+        'guerrillamail.com',
+        'guerrillamail.net',
+        'guerrillamail.org',
+        'guerrillamailblock.com',
+        'grr.la',
+        'sharklasers.com',
+        'spam4.me'
+      ]
+    };
+  }
+};
+
 // Initialize Guerrilla Mail session
-export const initGuerrillaSession = async (customUsername?: string): Promise<ApiResponse<{ emailAddress: string, sessionId: string }>> => {
+export const initGuerrillaSession = async (customUsername?: string, domain?: string): Promise<ApiResponse<{ emailAddress: string, sessionId: string }>> => {
   try {
     // Generate a random email if username is not provided
     const emailUsername = customUsername || generateRandomUsername();
@@ -349,7 +406,7 @@ export const initGuerrillaSession = async (customUsername?: string): Promise<Api
     
     const data = await response.json();
     
-    // Set custom email address if provided
+    // First set custom email address if provided
     if (emailUsername) {
       const setEmailParams = new URLSearchParams({
         f: 'set_email_user',
@@ -365,6 +422,31 @@ export const initGuerrillaSession = async (customUsername?: string): Promise<Api
       
       const setEmailData = await setEmailResponse.json();
       
+      // If domain is specified, set it after setting the username
+      if (domain) {
+        const setDomainParams = new URLSearchParams({
+          f: 'set_email_user',
+          domain: domain,
+          sid_token: data.sid_token,
+        });
+        
+        const setDomainResponse = await fetch(`${GUERRILLA_API_URL}?${setDomainParams}`);
+        
+        if (!setDomainResponse.ok) {
+          throw new Error('Failed to set custom domain');
+        }
+        
+        const setDomainData = await setDomainResponse.json();
+        
+        return {
+          status: 200,
+          data: {
+            emailAddress: setDomainData.email_addr,
+            sessionId: data.sid_token,
+          }
+        };
+      }
+      
       return {
         status: 200,
         data: {
@@ -374,6 +456,32 @@ export const initGuerrillaSession = async (customUsername?: string): Promise<Api
       };
     }
     
+    // If only domain is specified (without username)
+    if (domain && !emailUsername) {
+      const setDomainParams = new URLSearchParams({
+        f: 'set_email_user',
+        domain: domain,
+        sid_token: data.sid_token,
+      });
+      
+      const setDomainResponse = await fetch(`${GUERRILLA_API_URL}?${setDomainParams}`);
+      
+      if (!setDomainResponse.ok) {
+        throw new Error('Failed to set custom domain');
+      }
+      
+      const setDomainData = await setDomainResponse.json();
+      
+      return {
+        status: 200,
+        data: {
+          emailAddress: setDomainData.email_addr,
+          sessionId: data.sid_token,
+        }
+      };
+    }
+    
+    // Return the default email and session
     return {
       status: 200,
       data: {

@@ -87,4 +87,7 @@ export interface EmailContextType {
   customUsername: string;
   setCustomUsername: (username: string) => void;
   sessions: Record<Provider, ProviderSession>;
+  guerrillaDomains: string[];
+  fetchGuerrillaDomains: () => Promise<void>;
+  setGuerrillaSelectedDomain: (domain: string) => void;
 }
