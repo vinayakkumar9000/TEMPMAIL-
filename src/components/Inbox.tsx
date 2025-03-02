@@ -1,13 +1,12 @@
-
 import React, { useEffect } from 'react';
 import { useEmail } from '@/context/EmailContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, RefreshCw, Search, Trash2, Mail, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Separator } from '@/components/ui/separator';
 
 const Inbox = () => {
   const { 
@@ -26,6 +25,7 @@ const Inbox = () => {
     fetchEmailContent
   } = useEmail();
   
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filterType, setFilterType] = React.useState('all');
   
@@ -100,11 +100,11 @@ const Inbox = () => {
     <Card className="glass h-full hover:shadow-md transition-all duration-300">
       <CardHeader className="pb-3 flex flex-row items-start justify-between">
         <div>
-          <CardTitle className="text-xl font-medium">Inbox</CardTitle>
+          <CardTitle className="text-xl font-medium">{t('inbox.title')}</CardTitle>
           <CardDescription>
             {filteredEmails.length === 0 
-              ? "Your inbox is empty" 
-              : `${filteredEmails.length} message${filteredEmails.length === 1 ? '' : 's'}`}
+              ? t('inbox.empty')
+              : `${filteredEmails.length} ${filteredEmails.length === 1 ? t('inbox.messages') : t('inbox.messages.plural')}`}
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ const Inbox = () => {
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search emails..."
+                placeholder={t('inbox.search')}
                 className="pl-8"
                 value={searchTerm}
                 onChange={handleSearch}
@@ -166,10 +166,10 @@ const Inbox = () => {
                 <SelectValue placeholder="Filter" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="read">Read</SelectItem>
-                <SelectItem value="unread">Unread</SelectItem>
-                <SelectItem value="attachments">Attachments</SelectItem>
+                <SelectItem value="all">{t('inbox.filter.all')}</SelectItem>
+                <SelectItem value="read">{t('inbox.filter.read')}</SelectItem>
+                <SelectItem value="unread">{t('inbox.filter.unread')}</SelectItem>
+                <SelectItem value="attachments">{t('inbox.filter.attachments')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -179,7 +179,7 @@ const Inbox = () => {
           {filteredEmails.length === 0 ? (
             <div className="py-8 text-center">
               <Mail className="w-10 h-10 text-muted-foreground/50 mx-auto mb-3" />
-              <p className="text-muted-foreground">No messages found</p>
+              <p className="text-muted-foreground">{t('inbox.no.messages')}</p>
             </div>
           ) : (
             filteredEmails.map((email) => (

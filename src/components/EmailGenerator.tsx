@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
 import { useEmail } from '@/context/EmailContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
-import { Loader2, Copy, RefreshCw, ArrowRight } from 'lucide-react';
+import { Loader2, Copy, RefreshCw, ArrowRight, Check } from 'lucide-react';
 
 const EmailGenerator = () => {
   const { 
@@ -22,6 +23,7 @@ const EmailGenerator = () => {
     sessions
   } = useEmail();
   
+  const { t } = useLanguage();
   const [isCopied, setIsCopied] = useState(false);
   
   const handleGenerate = async () => {
@@ -38,7 +40,7 @@ const EmailGenerator = () => {
       setIsCopied(true);
       
       toast({
-        title: 'Copied to clipboard',
+        title: t('email.copy'),
         description: `${emailAddress.address} has been copied to your clipboard`,
       });
       
@@ -51,21 +53,25 @@ const EmailGenerator = () => {
   return (
     <Card className="glass hover:shadow-md transition-all duration-300">
       <CardHeader className="pb-3">
-        <CardTitle className="text-xl font-medium">Generate Email Address</CardTitle>
+        <CardTitle className="text-xl font-medium">{t('email.generate')}</CardTitle>
         <CardDescription>
           {emailAddress 
-            ? "Your temporary email is ready to use" 
-            : "Create a new temporary email address with a random name & number"}
+            ? t('email.ready')
+            : t('email.create')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {emailAddress ? (
           <div className="animate-fade-in">
             <Label htmlFor="email-address" className="text-sm font-medium">
-              Your temporary email address
+              {t('email.temporary')}
             </Label>
             <div className="mt-1.5 flex items-center gap-2">
-              <div className="bg-secondary/80 text-secondary-foreground rounded-md px-3 py-2 text-sm font-mono flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap border border-border">
+              <div 
+                className="bg-secondary/80 text-secondary-foreground rounded-md px-3 py-2 text-sm font-mono flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap border border-border cursor-pointer hover:bg-secondary transition-colors"
+                onClick={handleCopy}
+                title="Click to copy"
+              >
                 {emailAddress.address}
               </div>
               <Button
@@ -75,11 +81,11 @@ const EmailGenerator = () => {
                 className="hover:bg-secondary/80 transition-colors"
                 aria-label="Copy email address"
               >
-                <Copy size={16} className={isCopied ? "text-primary" : ""} />
+                {isCopied ? <Check size={16} className="text-primary" /> : <Copy size={16} />}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              This address will expire after session end. Keep this tab open to maintain your session.
+              {t('email.expire')}
             </p>
           </div>
         ) : (
@@ -87,17 +93,17 @@ const EmailGenerator = () => {
             {currentProvider === 'guerrilla' && (
               <div>
                 <Label htmlFor="username" className="text-sm font-medium">
-                  Username (optional)
+                  {t('email.username')}
                 </Label>
                 <Input
                   id="username"
-                  placeholder="e.g., NameXXXX (uses random if blank)"
+                  placeholder={t('email.username.placeholder')}
                   value={customUsername}
                   onChange={(e) => setCustomUsername(e.target.value)}
                   className="mt-1.5"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  Leave blank to generate a random name with 4-digit number
+                  {t('email.username.help')}
                 </p>
               </div>
             )}
@@ -105,17 +111,17 @@ const EmailGenerator = () => {
             {currentProvider === 'mailtm' && (
               <div>
                 <Label htmlFor="username" className="text-sm font-medium">
-                  Username (optional)
+                  {t('email.username')}
                 </Label>
                 <Input
                   id="username"
-                  placeholder="e.g., NameXXXX (uses random if blank)"
+                  placeholder={t('email.username.placeholder')}
                   value={customUsername}
                   onChange={(e) => setCustomUsername(e.target.value)}
                   className="mt-1.5"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  Leave blank to generate a random name with 4-digit number. Domain will be selected automatically.
+                  {t('email.username.help')} {t('email.domain.help')}
                 </p>
               </div>
             )}
@@ -133,12 +139,12 @@ const EmailGenerator = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="animate-spin mr-2" />
-                Regenerating...
+                {t('email.regenerating')}
               </>
             ) : (
               <>
                 <RefreshCw size={16} className="mr-2" />
-                Generate New Address
+                {t('email.generate.new')}
               </>
             )}
           </Button>
@@ -151,11 +157,11 @@ const EmailGenerator = () => {
             {loading ? (
               <>
                 <Loader2 size={16} className="animate-spin mr-2" />
-                Generating...
+                {t('email.generating')}
               </>
             ) : (
               <>
-                Create Temporary Email
+                {t('email.create.temporary')}
                 <ArrowRight size={16} className="ml-2" />
               </>
             )}

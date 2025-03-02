@@ -3,6 +3,9 @@ import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
+import UserIpDisplay from '@/components/UserIpDisplay';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +13,8 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, className }) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="w-full glass sticky top-0 z-50 border-b border-b-border/20 shadow-sm">
@@ -27,12 +32,13 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h1 className="text-xl font-medium tracking-tight">TempMail</h1>
+            <h1 className="text-xl font-medium tracking-tight">{t('app.title')}</h1>
           </div>
           <nav className="flex items-center space-x-4">
+            <LanguageSelector />
             <ThemeToggle />
             <a
-              href="https://github.com/yourusername/temp-mail-saas"
+              href="https://github.com/vinayakkumar9000"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-1"
@@ -60,13 +66,21 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
       </main>
       <footer className="w-full border-t border-t-border/20 py-4">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            TempMail - Your temporary email solution
-          </p>
-          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-            <span>© {new Date().getFullYear()} TempMail</span>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <p className="text-sm text-muted-foreground">
+              {t('app.description')}
+            </p>
+            <div className="text-xs text-muted-foreground">
+              Powered by Mail.tm and Guerrilla Mail
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <span>© {new Date().getFullYear()} TempMail</span>
+              <a href="#" className="hover:text-foreground transition-colors">{t('footer.privacy')}</a>
+              <a href="#" className="hover:text-foreground transition-colors">{t('footer.terms')}</a>
+            </div>
+            <UserIpDisplay />
           </div>
         </div>
       </footer>
