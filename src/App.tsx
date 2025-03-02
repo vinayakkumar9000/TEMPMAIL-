@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import LanguageContainer from "@/components/LanguageContainer";
 import Index from "./pages/Index";
+import Download from "./pages/Download";
 import NotFound from "./pages/NotFound";
 
 // Create React Query client
@@ -24,6 +25,7 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/download" element={<Download />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

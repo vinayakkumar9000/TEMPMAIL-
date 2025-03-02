@@ -3,8 +3,10 @@ import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 import LanguageSelector from '@/components/LanguageSelector';
 import UserIpDisplay from '@/components/UserIpDisplay';
+import SiteMenu from '@/components/SiteMenu';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface LayoutProps {
@@ -40,6 +42,8 @@ const Layout: React.FC<LayoutProps> = ({ children, className }) => {
           <nav className="flex items-center space-x-4">
             <LanguageSelector />
             <ThemeToggle />
+            <ThemeSwitcher />
+            <SiteMenu />
             <a
               href="https://github.com/vinayakkumar9000"
               target="_blank"
