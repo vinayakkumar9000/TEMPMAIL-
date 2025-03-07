@@ -1,6 +1,6 @@
 # 📧 Temp Mail - Disposable Email Generator 🚀  
 
-This is a **temporary email generator** that allows users to create **disposable email addresses** for **privacy, security, and spam protection**. 🛡️🔒 Built using **[Lovable.dev](https://lovable.dev/projects/487edbe4-49ff-4f4d-9191-82bbb398357b)**, it is **lightweight, fast, and open-source**! 🌍✨  
+This is a **temporary email generator** that allows users to create **disposable email addresses** for **privacy, security, and spam protection**. 🛡️🔒 Built using **[Lovable.dev](https://lovable.dev/projects/7ad1ae6c-1d0b-4750-b508-b566e99cef25)**, it is **lightweight, fast, and open-source**! 🌍✨  
 
 ---
 
